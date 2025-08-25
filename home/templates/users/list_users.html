@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% block header %}
+{% include "partials/header/header.html" %}
+{% endblock %}
+
+<main class="container">
+    {% if messages %}
+    <div class="modal fade" id="modalMessage" tabindex="-1" aria-labelledby="modalMessageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalMessageLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for message in messages %}
+                        <li class="list-group-item {{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <h1 class="text-center color_azul">Lista de Usuários</h1>
+    <div class="text-center mb-4 mt-4">
+        <a href="{% url "register_user" %}" class="btn btn_verde color_preto">Cadastrar novo usuário</a>
+    </div>
+    <div class="row">
+        {% for user in users %}
+        <div class="col-sm-4 mb-3 mb-sm-0">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="h5 card-text color_preto">Nome do usuário: <span class="color_azul">{{ user.nome_usuario }}</span></h5>
+                    <p class="card-text color_preto">Email: <span class="color_azul">{{ user.email_usuario }}</span></p>
+                    <p class="card-text color_preto">CPF: <span class="color_azul">{{ user.cpf_usuario }}</span></p>
+                    <p class="card-text color_preto">Perfil: <span class="color_azul">{{ user.perfil.nome_perfil }}</span></p>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url "update_user" user.id_usuario %}" class="btn btn_azul color_preto">Editar cadastro</a>
+                        <a href="#" class="btn btn_rosa color_preto">Apagar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+{% endblock %}

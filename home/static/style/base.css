@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --azul: #1331A1;
+    --Rosa: #F31366;
+    --amarelo: #F8B62F;
+    --verde: #A2CA02;
+    --Cinza: #F2F2F2;
+    --Preto: #0C0C0C;
+}
+
+body {
+    background-color: var(--Cinza);
+    font-family: "Roboto Condensed", sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+}
+
+.image_header {
+    width: 10%;
+}
+
+.color_azul_menu {
+    color: var(--azul);
+}
+
+.color_azul_menu:hover{
+    color: #0a1950;
+}
+
+.margin_menu {
+    margin-left: 10rem;
+}
+
+.color_azul {
+    color: var(--azul);
+}
+
+.color_preto {
+    color: var(--Preto);
+}
+
+.btn_azul {
+    border: 2px solid var(--azul);
+    border-radius: 50px;
+    padding: 5px 10px;
+    background-color: transparent;
+}
+
+.btn_azul:hover {
+    text-shadow: 0 4px 4px 0 var(--azul);
+    background-color: transparent;
+}
+
+.btn_rosa {
+    border: 2px solid var(--Rosa);
+    border-radius: 50px;
+    padding: 5px 10px;
+    background-color: transparent;
+}
+
+.btn_rosa:hover {
+    text-shadow: 0 4px 4px 0 var(--Rosa);
+    background-color: transparent;
+}
+
+.btn_verde {
+    border: 2px solid var(--verde);
+    border-radius: 50px;
+    padding: 5px 10px;
+    background-color: transparent;
+} 
+
+.btn_verde:hover {
+    text-shadow: 0 4px 4px 0 var(--verde);
+    background-color: transparent;
+}

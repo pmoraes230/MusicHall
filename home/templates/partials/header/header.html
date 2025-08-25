@@ -1,0 +1,40 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href=""><img src="{% static "images/logo.png" %}" alt="image" class="image_header"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse margin_menu" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link color_azul_menu" href="#">Usuários</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link color_azul_menu" href="#">Cadastro de eventos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link color_azul_menu" href="#">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link color_azul_menu" href="#">Validador</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle color_azul_menu" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        {% if user_name %}
+                        {{ user_name }}
+                        {% else %}
+                        Sem usuário encontrado
+                        {% endif %}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item color_azul_menu" href="#">Sair</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

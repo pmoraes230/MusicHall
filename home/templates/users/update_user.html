@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% block header %}
+{% include "partials/header/header.html" %}
+{% endblock %}
+
+<main class="container">
+    {% if messages %}
+    <div class="modal fade" id="modalMessage" tabindex="-1" aria-labelledby="modalMessageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalMessageLabel">Aviso</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for message in messages %}
+                        <li class="list-group-item {{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <h1 class="text-center color_azul">Cadastrar usuário</h1>
+    <form action="#" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="nome_usuario" class="form-label color_azul">Nome completo:</label>
+            <input type="text" class="form-control color_azul" name="nome_usuario" id="nome_usuario" placeholder="insira seu nome completo" value="{{ user.nome_usuario }}">
+        </div>
+        <div class="mb-3">
+            <label for="email_usuario" class="form-label color_azul">Email:</label>
+            <input type="email" class="form-control color_azul" name="email_usuario" id="email_usuario" placeholder="insira seu nome completo" value="{{ user.email_usuario }}">
+        </div>
+        <div class="mb-3">
+            <label for="cpf_usuario" class="form-label color_azul">CPF:</label>
+            <input type="text" class="form-control color_azul" name="cpf_usuario" id="cpf_usuario" placeholder="insira seu Email" oninput="maskCPF(this)" maxlength="14" value="{{ user.cpf_usuario }}">
+        </div>
+        <div class="mb-3">
+            <label for="perfil_usuario" class="form-label color_azul">Perfil:</label>
+            <select name="perfil_usuario" id="perfil_usuario" class="color_azul form-select">
+                <option value="" disabled selected>Escolha o perfil do usuário</option>
+                {% for profile in profiles %}
+                {% if profile.id_perfil == user.perfil.id_perfil %}
+                <option value="{{ profile.id_perfil }}" select>{{ profile.nome_perfil }}</option>
+                {% else %}
+                <option value="{{ profile.id_perfil }}">{{ profile.nome_perfil }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn_azul color_preto">Cadastrar</button>
+        </div>
+    </form>
+</main>
+{% endblock %}
+{% block script %}
+<script src="{% static "scripts/cpf_format.js" %}"></script>
+{% endblock %}
