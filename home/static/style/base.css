@@ -108,6 +108,9 @@ main {
 .line_footer {
     border-top: 2px solid var(--azul);
 }
+.line_footer_vendedor {
+    border-top: 2px solid var(--Rosa);
+}
 
 .header_card {
     background-color: var(--Preto);
@@ -118,4 +121,32 @@ main {
     max-width: 639px;
     width: 100%;
     height: 20rem;
+}
+
+.margin_menu_maior {
+    margin-left: 36rem;
+}
+
+.line_admin {
+    border-bottom: 3px solid var(--azul);
+}
+
+.line_validador {
+    border-bottom: 3px solid var(--amarelo);
+}
+
+.line_vendedor {
+    border-bottom: 3px solid var(--Rosa);
+}
+
+@media (max-width: 440px) {
+    .margin_menu {
+        margin-left: 0;
+    }
+    .margin_menu_maior {
+        margin-left: 0;
+    }
+    .flex_column {
+        flex-direction: column;
+    }
 }

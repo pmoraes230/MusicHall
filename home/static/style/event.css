@@ -2,10 +2,6 @@
     margin: 0 2rem;
 }
 
-.gap-5 {
-    gap: 5px;
-}
-
 .inf {
     background-color: var(--amarelo);
     padding: 5px 10px;

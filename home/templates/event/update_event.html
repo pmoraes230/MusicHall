@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% block header %}
+{% include "partials/header/header.html" %}
+{% endblock %}
+
+<main class="container">
+    {% if messages %}
+    <div class="modal fade" id="modalMessage" tabindex="-1" aria-labelledby="modalMessageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 color_azul" id="modalMessageLabel">Aviso</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for message in messages %}
+                        <li class="list-group-item color_azul {{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn_azul color_preto" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <h1 class="text-center color_azul">Atualizar evento</h1>
+    <form action="#" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="nome_usuario" class="form-label color_azul">Nome do evento:</label>
+            <input type="text" class="form-control color_azul" name="nome_usuario" id="nome_usuario" placeholder="insira seu nome evento" value="{{ event.nome_evento }}">
+        </div>
+        <div class="mb-3">
+            <label for="limite_pessoas" class="form-label color_azul">Limite de pessoas:</label>
+            <input type="number" class="form-control color_azul" name="limite_pessoas" id="limite_pessoas" placeholder="limite de pessoas no evento" value="{{ event.limitepessoas_evento }}">
+        </div>
+        <div class="mb-3">
+            <label for="date_event" class="form-label color_azul">Data do evento:</label>
+            <input type="date" class="form-control color_azul" name="date_event" id="date_event" value="{{ event.data_evento|date:"Y-m-d" }}">
+        </div>
+        <div class="mb-3">
+            <label for="time_event" class="form-label color_azul">Horário do evento:</label>
+            <input type="time" class="form-control color_azul" name="time_event" id="time_event" value="{{ event.horario_evento|time:"H:i" }}">
+        </div>
+        <div class="mb-3">
+            <label for="image_event" class="form-label color_azul">Imagem:</label>
+            <input type="file" name="image_event" id="image_event" class="form-control color_azul" accept="jpg/png">
+            <p class="color_azul">Imagem do evento: <img src="{{ event.imagem_evento.url }}" style="width: 9rem;" alt="{{ event.nome_evento }}"></p>
+        </div>
+        <div class="mb-3">
+            <label for="descricao_event" class="form-label color_azul">Descrição:</label>
+            <textarea name="descricao_event" id="descricao_event" class="form-control color_azul" rows="8" style="resize: none;">{{ event.descricao_evento }}</textarea>
+        </div>
+        
+        <div class="text-center">
+            <button type="submit" class="btn btn_verde color_preto">Cadastrar</button>
+            <a href="{% url 'home' %}" class="btn btn_rosa color_preto">Cancelar</a>
+        </div>
+    </form>
+</main>
+{% endblock %}
+{% block script %}
+<script src="{% static "scripts/cpf_format.js" %}"></script>
+{% endblock %}
+{% block footer %}
+{% include "partials/footer/footer.html" %}
+{% endblock %}

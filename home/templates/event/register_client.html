@@ -30,11 +30,11 @@
     </div>
     {% endif %}
 
-    <h1 class="text-center color_azul">Cadastrar usuário</h1>
+    <h1 class="text-center color_azul">Cadastrar cliente</h1>
     <form action="#" method="post">
         {% csrf_token %}
         <div class="mb-3">
-            <label for="nome_usuario" class="form-label color_azul">Nome completo:</label>
+            <label for="nome_usuario" class="form-label color_azul">Nome:</label>
             <input type="text" class="form-control color_azul" name="nome_usuario" id="nome_usuario" placeholder="insira seu nome completo">
         </div>
         <div class="mb-3">
@@ -45,25 +45,9 @@
             <label for="cpf_usuario" class="form-label color_azul">CPF:</label>
             <input type="text" class="form-control color_azul" name="cpf_usuario" id="cpf_usuario" placeholder="insira seu Email" oninput="maskCPF(this)" maxlength="14">
         </div>
-        <div class="mb-3">
-            <label for="perfil_usuario" class="form-label color_azul">Perfil:</label>
-            <select name="perfil_usuario" id="perfil_usuario" class="color_azul form-select">
-                <option value="" disabled selected>Escolha o perfil do usuário</option>
-                {% for profile in profiles %}
-                <option value="{{ profile.id_perfil }}">{{ profile.nome_perfil }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="password_usuario" class="form-label color_azul">Senha:</label>
-            <input type="password" class="form-control color_azul" name="password_usuario" id="password_usuario" placeholder="Insira a sua senha">
-        </div>
-        <div class="mb-3">
-            <label for="confirm_password" class="form-label color_azul">Confirmar senha:</label>
-            <input type="password" class="form-control color_azul" name="confirm_password" id="confirm_password" placeholder="Confirme sua senha">
-        </div>
         <div class="text-center">
-            <button type="submit" class="btn btn_azul color_preto">Cadastrar</button>
+            <button type="submit" class="btn btn_verde color_preto">Cadastrar</button>
+            <a href="{% url 'deteils_event' event.id_evento %}" class="btn btn_rosa color_preto">Cancelar cadastro</a>
         </div>
     </form>
 </main>

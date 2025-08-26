@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'style/event.css' %}">
+{% endblock %}
+
+{% block content %}
+{% block header %}
+{% include "partials/header/header.html" %}
+{% endblock %}
+
+<main class="container">
+    {% if messages %}
+    <div class="modal fade" id="modalMessage" tabindex="-1" aria-labelledby="modalMessageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 color_azul" id="modalMessageLabel">Aviso</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for message in messages %}
+                        <li class="list-group-item color_azul {{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn_azul color_preto" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-center align-items-center flex_column">
+        <div class="image_event">
+            {% if event.imagem_evento %}
+                <img src="{{ event.imagem_evento.url }}" alt="{{ event.nome_evento }}" class="image_card_event">
+            {% else %}
+                <img src="{% static 'images/default.jpg' %}" alt="" class="image_card_event">
+            {% endif %}
+        </div>
+        <div class="d-flex">
+            <div class="inf_event">
+                <h1 class="h1 color_azul">{{ event.nome_evento }}</h1>
+                <div class="d-flex gap-2">
+                    <div class="inf">
+                        <h5 class="h5 color_azul">{{ event.data_evento|date:"d/m/Y" }}</h5>
+                    </div>
+                    <div class="inf">
+                        <h5 class="h5 color_azul">{{ event.horario_evento|time:"H:i" }}</h5>
+                    </div>
+                </div>
+                <div class="description_event color_azul" style="width: 80%;">
+                    {{ event.descricao_evento }}
+                </div>
+                <div class="d-flex">
+                    <a href="{% url 'list_tickets' event.id_evento %}" class="btn btn_verde color_preto">Ingressos gerados</a>
+                    <a href="{% url 'update_event' event.id_evento %}" class="btn btn_azul color_preto">Editar Evento</a>
+                    <a href="{% url 'list_sector' event.id_evento %}" class="btn btn_amarelo color_preto">Setores do evento</a>
+                    <a href="{% url 'delete_event' event.id_evento %}" class="btn btn_rosa color_preto">Apagar evento</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="h1 text-center color_azul">Ingressos gerados</h1>
+    <div class="row">
+        {% for ticket in tickets %}
+        <div class="col-sm-4 mb-3 mb-sm-0">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="h5 card-text color_preto">Nome do cliente: <span class="color_azul">{{ ticket.cliente.nome_cliente }}</span></h5>
+                    <p class="card-text color_preto h6">CPF: <span class="color_azul">{{ ticket.cliente.cpf_cliente }}</span></p>
+                    <p class="card-text color_preto h6">Evento: <span class="color_azul">{{ ticket.evento.nome_evento }}</span></p>
+                    <p class="card-text color_preto h6">Setor comprado: <span class="color_azul">{{ ticket.setor.nome_setor }}</span></p>
+                    <p class="card-text color_preto h6">Data de emissão: <span class="color_azul">{{ ticket.data_emissao_ingresso|date:"d/m/Y H:i" }}</span></p>
+                    <p class="card-text color_preto h6">Status: <span class="color_azul">{{ ticket.status_ingresso }}</span></p>
+                    <p class="card-text color_preto h5">Status: <span class="color_azul">{{ ticket.id_ingresso }}</span></p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+{% endblock %}
+{% block footer %}
+{% include "partials/footer/footer.html" %}
+{% endblock %}

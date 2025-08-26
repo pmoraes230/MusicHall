@@ -30,7 +30,7 @@
     </div>
     {% endif %}
 
-    <h1 class="text-center color_azul">Cadastrar usuário</h1>
+    <h1 class="text-center color_azul">Atualizar usuário</h1>
     <form action="#" method="post">
         {% csrf_token %}
         <div class="mb-3">
@@ -64,6 +64,10 @@
     </form>
 </main>
 {% endblock %}
+{% block footer %}
+{% include "partials/footer/footer.html" %}
+{% endblock %}
+
 {% block script %}
 <script src="{% static "scripts/cpf_format.js" %}"></script>
 {% endblock %}

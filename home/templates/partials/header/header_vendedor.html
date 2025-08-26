@@ -1,26 +1,14 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-lg line_admin mb-4">
+<nav class="navbar navbar-expand-lg line_vendedor mb-4">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static "images/logo.png" %}" alt="image" class="image_header"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse margin_menu" id="navbarNavDropdown">
+        <div class="collapse navbar-collapse margin_menu_maior" id="navbarNavDropdown">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link color_azul_menu" href="{% url 'list_user' %}">Usuários</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link color_azul_menu" href="{% url 'register_event' %}">Cadastro de eventos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link color_azul_menu" href="#">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link color_azul_menu" href="#">Validador</a>
-                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle color_azul_menu" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">

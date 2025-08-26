@@ -7,7 +7,13 @@
 
 {% block content %}
 {% block header %}
+{% if user_role == "Vendedor" %}
+{% include "partials/header/header_vendedor.html" %}
+{% elif user_role == "Validador" %}
+{% include "partials/header/header_validador.html" %}
+{% else %}
 {% include "partials/header/header.html" %}
+{% endif %}
 {% endblock %}
 
 <main class="container">
@@ -34,7 +40,7 @@
     </div>
     {% endif %}
 
-    <div class="d-flex justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center flex_column">
         <div class="image_event">
             {% if event.imagem_evento %}
                 <img src="{{ event.imagem_evento.url }}" alt="{{ event.nome_evento }}" class="image_card_event">
@@ -45,7 +51,7 @@
         <div class="d-flex">
             <div class="inf_event">
                 <h1 class="h1 color_azul">{{ event.nome_evento }}</h1>
-                <div class="d-flex gap-5">
+                <div class="d-flex gap-2">
                     <div class="inf">
                         <h5 class="h5 color_azul">{{ event.data_evento|date:"d/m/Y" }}</h5>
                     </div>
@@ -56,43 +62,73 @@
                 <div class="description_event color_azul" style="width: 80%;">
                     {{ event.descricao_evento }}
                 </div>
+                {% if user_role == "Administrador" %}
                 <div class="d-flex">
-                    <a href="#" class="btn btn_verde color_preto">Ingressos gerados</a>
-                    <a href="#" class="btn btn_azul color_preto">Editar Evento</a>
-                    <a href="#" class="btn btn_amarelo color_preto">Setores do evento</a>
-                    <a href="#" class="btn btn_rosa color_preto">Apagar evento</a>
+                    <a href="{% url 'list_tickets' event.id_evento %}" class="btn btn_verde color_preto">Ingressos gerados</a>
+                    <a href="{% url 'update_event' event.id_evento %}" class="btn btn_azul color_preto">Editar Evento</a>
+                    <a href="{% url 'list_sector' event.id_evento %}" class="btn btn_amarelo color_preto">Setores do evento</a>
+                    <a href="{% url 'delete_event' event.id_evento %}" class="btn btn_rosa color_preto">Apagar evento</a>
                 </div>
+                {% endif %}
             </div>
         </div>
-
     </div>
     <div class="mt-4">
         {% if not client %}
-        <h1 class="h1 color_azul">Venda de ingresso</h1>
-        <form action="{% url 'deteils_event' event.id_evento %}" method="post">
+            <h1 class="h1 color_azul">Venda de ingresso</h1>
+            <form action="{% url 'deteils_event' event.id_evento %}" method="post">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="search_client" class="form-label color_azul">Pesquisar Cliente</label>
                 <input type="text" name="search_client" id="search_client" class="form-control color_azul" placeholder="Coloque o nome do cliente">
             </div>
             <div class="buttons">
-                <button type="submit" class="btn btn_verde color_preto" name="search_client">Pesquisar</button>
-                <a href="#" class="btn btn_azul color_preto">Cadastrar cliente</a>
+                <button type="submit" class="btn btn_verde color_preto" name="search">Pesquisar</button>
+                <a href="{% url 'register_client' event.id_evento %}" class="btn btn_azul color_preto">Cadastrar cliente</a>
             </div>
         </form>
-        {% elif search_client %}
-        {% for client in search_client %}
-        <ul class="list-group">
-            <li class="list-group-item">
-                {{ client.nome_usuario }}
-                <form action="#" method="post" style="display: inline;">
-                    <button type="submit" class="btn btn_amarelo color_preto" name="client_selected">Selecionar</button>
-                </form>
-            </li>
-        </ul>
-        {% endfor %}
+            {% if search_client %}
+                <h1 class="h1 color_azul mt-4">Selecionar cliente</h1>
+                {% for client in search_client %}
+                <ul class="list-group mt-2">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <h5 class="h5 color_azul">{{ client.nome_cliente }}</h5>
+                        <form action="{% url 'deteils_event' event.id_evento %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="client_id" value="{{ client.id_cliente }}">
+                            <button type="submit" class="btn btn_amarelo color_preto" name="client_selected">Selecionar</button>
+                        </form>
+                    </li>
+                </ul>
+            {% endfor %}
+        {% endif %}
         {% else %}
         <h1 class="h1 color_azul">Venda de ingresso</h1>
+        <h4 class="color_azul h4">Cliente selecionado: {{ client.nome_cliente }}</h4>
+        <form action="{% url 'buy_client' event.id_evento %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="sectors" class="form-label color_azul">Escolha o setor para a venda:</label>
+                <select name="sectors" id="sectors" class="form-select color_azul">
+                    <option value="" selected disabled>Selecione um setor do evento</option>
+                    {% for sector in sectors %}
+                    <option value="{{ sector.id_setor }}">
+                        {% if sector.limite_setor == 0 %}Setor esgotado.{% else %}
+                        {{ sector.nome_setor }} (Ingresso disponíveis neste setor {{ sector.limite_setor }})
+                        {% endif %}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="amount" class="form-label color_azul">Quantidade de ingresso:</label>
+                <input type="number" value="0" name="amount" id="amount" class="form-control color_azul" placeholder="Quantidade de ingresso">
+            </div>
+            <div class="buttons">
+                <button type="submit" class="btn btn_verde color_preto" name="buy_ticket">Comprar</button>
+                <a href="{% url 'deteils_event' event.id_evento %}" class="btn btn_rosa color_preto">Cancelar venda</a>
+            </div>
+        </form>
         {% endif %}
     </div>
 
@@ -100,5 +136,11 @@
 
 {% endblock %}
 {% block footer %}
+{% if user_role == "Validador" %}
+{% include "partials/footer/footer_validador.html" %}
+{% elif user_role == "Vendedor" %}
+{% include "partials/footer/footer_vendedor.html" %}
+{% else %}
 {% include "partials/footer/footer.html" %}
+{% endif %}
 {% endblock %}
