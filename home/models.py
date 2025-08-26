@@ -10,6 +10,9 @@ class Cliente(models.Model):
     class Meta:
         managed = False
         db_table = 'cliente'
+        
+    def __str__(self):
+        return self.nome_cliente
 
 
 class Evento(models.Model):
@@ -19,12 +22,15 @@ class Evento(models.Model):
     data_evento = models.DateField(db_column='Data_Evento')  # Field name made lowercase.
     horario_evento = models.TimeField(db_column='Horario_Evento')  # Field name made lowercase.
     descricao_evento = models.TextField(db_column='Descricao_Evento')  # Field name made lowercase.
-    imagem_evento = models.CharField(db_column='Imagem_Evento', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    imagem_evento = models.ImageField(upload_to="event")
     usuario_id_usuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='Usuario_ID_Usuario')  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'evento'
+        
+    def __str__(self):
+        return self.nome_evento
 
 
 class Ingresso(models.Model):
@@ -38,6 +44,9 @@ class Ingresso(models.Model):
     class Meta:
         managed = False
         db_table = 'ingresso'
+        
+    def __str__(self):
+        return f"ingresso para o cliente {self.cliente.nome_cliente} no evento {self.evento.nome_evento}"
 
 
 class Perfil(models.Model):
@@ -48,6 +57,8 @@ class Perfil(models.Model):
         managed = False
         db_table = 'perfil'
 
+    def __str__(self):
+        return self.nome_perfil
 
 class Setor(models.Model):
     id_setor = models.AutoField(db_column='ID_Setor', primary_key=True)  # Field name made lowercase.
@@ -60,6 +71,8 @@ class Setor(models.Model):
         managed = False
         db_table = 'setor'
 
+    def __str__(self):
+        return self.nome_setor
 
 class Usuario(models.Model):
     id_usuario = models.AutoField(db_column='ID_Usuario', primary_key=True)  # Field name made lowercase.
@@ -72,3 +85,6 @@ class Usuario(models.Model):
     class Meta:
         managed = False
         db_table = 'usuario'
+
+    def __str__(self):
+        return self.nome_usuario

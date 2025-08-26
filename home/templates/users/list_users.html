@@ -12,18 +12,18 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modalMessageLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5 color_azul" id="modalMessageLabel">Aviso</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <ul class="list-group">
                         {% for message in messages %}
-                        <li class="list-group-item {{ message.tags }}">{{ message }}</li>
+                        <li class="list-group-item color_azul {{ message.tags }}">{{ message }}</li>
                         {% endfor %}
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn_azul color_preto" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
@@ -31,12 +31,16 @@
     {% endif %}
 
     <h1 class="text-center color_azul">Lista de Usuários</h1>
+    <div class="mb-3">
+        <label for="searchUser" class="form-label color_azul">Procurar usuário</label>
+        <input type="text" id="searchUser" class="form-control w-100 color_preto" placeholder="Insira o nome do usuário ou email">
+    </div>
     <div class="text-center mb-4 mt-4">
         <a href="{% url "register_user" %}" class="btn btn_verde color_preto">Cadastrar novo usuário</a>
     </div>
     <div class="row">
         {% for user in users %}
-        <div class="col-sm-4 mb-3 mb-sm-0">
+        <div class="col-sm-4 mb-3 mb-sm-0 card_user" data-name="{{ user.nome_usuario|lower }}" data-email="{{ user.email_usuario|lower }}">
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="h5 card-text color_preto">Nome do usuário: <span class="color_azul">{{ user.nome_usuario }}</span></h5>

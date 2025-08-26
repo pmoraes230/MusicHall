@@ -45,38 +45,77 @@ main {
     color: var(--Preto);
 }
 
+.color_rosa {
+    color: var(--Rosa);
+}
+
 .btn_azul {
+    background-color: transparent;
     border: 2px solid var(--azul);
     border-radius: 50px;
-    padding: 5px 10px;
-    background-color: transparent;
 }
 
 .btn_azul:hover {
-    text-shadow: 0 4px 4px 0 var(--azul);
-    background-color: transparent;
+    border: 2px solid var(--azul);
+    box-shadow: 0 4px 4px 0 var(--azul); 
 }
 
 .btn_rosa {
     border: 2px solid var(--Rosa);
     border-radius: 50px;
-    padding: 5px 10px;
     background-color: transparent;
 }
 
 .btn_rosa:hover {
-    text-shadow: 0 4px 4px 0 var(--Rosa);
-    background-color: transparent;
+    border: 2px solid var(--Rosa);
+    box-shadow: 0 4px 4px 0 var(--Rosa); 
 }
 
 .btn_verde {
     border: 2px solid var(--verde);
     border-radius: 50px;
-    padding: 5px 10px;
     background-color: transparent;
 } 
 
 .btn_verde:hover {
-    text-shadow: 0 4px 4px 0 var(--verde);
+    border: 2px solid var(--verde);
+    box-shadow: 0 4px 4px 0 var(--verde); 
+}
+
+.btn_amarelo {
+    border: 2px solid var(--amarelo);
+    border-radius: 50px;
     background-color: transparent;
+}
+
+.btn_amarelo:hover {
+    border: 2px solid var(--amarelo);
+    box-shadow: 0 4px 4px 0 var(--amarelo); 
+}
+
+.error {
+    color: var(--Rosa);
+}
+
+.info {
+    color: var(--amarelo);
+}
+
+.sucess {
+    color: var(--verde);
+}
+
+.line_footer {
+    border-top: 2px solid var(--azul);
+}
+
+.header_card {
+    background-color: var(--Preto);
+    width: 100%;
+}
+
+.image_card_event {
+    max-width: 639px;
+    width: 100%;
+    height: 20rem;
 }

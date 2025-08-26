@@ -1,0 +1,20 @@
+.inf_event{
+    margin: 0 2rem;
+}
+
+.gap-5 {
+    gap: 5px;
+}
+
+.inf {
+    background-color: var(--amarelo);
+    padding: 5px 10px;
+    border-radius: 14px;
+}
+
+.description_event {
+    margin: 1rem 0;
+    font-size: 25px;
+    font-weight: bold;
+    border-bottom: 2px solid var(--amarelo);
+}
