@@ -1,11 +1,16 @@
 document.getElementById("searchUser").addEventListener("input", function() {
-    let searchUser = value.this.toLowerCase();
+    let searchText = this.value.toLowerCase();
     let cards = document.querySelectorAll(".card_user")
 
-    cards.forEach(() => {
-        let name = getAttribute("data-name")
-        let email = getAttribute("data-email")
+    cards.forEach(card => {
+        let name = card.getAttribute("data-name")
+        let email = card.getAttribute("data-email")
 
+        if(name.includes(searchText) || email.includes(searchText)) {
+            card.style.display = "block"
+        } else {
+            card.style.display = "none"
+        }
         
     })
 })

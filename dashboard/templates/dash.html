@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'style/event.css' %}">
+{% endblock %}
+
+{% block content %}
+{% block header %}
+{% if user_role == "Vendedor" %}
+{% include "partials/header/header_vendedor.html" %}
+{% elif user_role == "Validador" %}
+{% include "partials/header/header_validador.html" %}
+{% else %}
+{% include "partials/header/header.html" %}
+{% endif %}
+{% endblock %}
+
+<main class="container">
+    {% if messages %}
+    <div class="modal fade" id="modalMessage" tabindex="-1" aria-labelledby="modalMessageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 color_azul" id="modalMessageLabel">Aviso</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for message in messages %}
+                        <li class="list-group-item color_azul {{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn_azul color_preto" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <h1 class="h1 text-center color_azul">Dashboard</h1>
+
+    <form action="{% url 'dash' %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_evento" class="form-label color_azul">Escolha o evento</label>
+            <select name="id_evento" id="id_evento" class="form-select color_azul">
+                <option value="" disabled selected>Escolha o evento</option>
+                {% for event in events %}
+                <option value="{{ event.id_evento }}">{{ event.nome_evento }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn_verde color_preto">Pesquisar</button>
+        </div>
+    </form>
+
+    {% if event %}
+    <div class="d-flex justify-content-center align-items-center flex_column">
+        <div class="image_event">
+            {% if event.imagem_evento %}
+                <img src="{{ event.imagem_evento.url }}" alt="{{ event.nome_evento }}" class="image_card_event">
+            {% else %}
+                <img src="{% static 'images/default.jpg' %}" alt="" class="image_card_event">
+            {% endif %}
+        </div>
+        <div class="d-flex">
+            <div class="inf_event">
+                <h1 class="h1 color_azul">{{ event.nome_evento }}</h1>
+                <div class="d-flex gap-2">
+                    <div class="inf">
+                        <h5 class="h5 color_azul">{{ event.data_evento|date:"d/m/Y" }}</h5>
+                    </div>
+                    <div class="inf">
+                        <h5 class="h5 color_azul">{{ event.horario_evento|time:"H:i" }}</h5>
+                    </div>
+                </div>
+                <div class="description_event color_azul" style="width: 80%;">
+                    {{ event.descricao_evento }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</main>
+{% endblock %}
+{% block footer %}
+{% if user_role == "Validador" %}
+{% include "partials/footer/footer_validador.html" %}
+{% elif user_role == "Vendedor" %}
+{% include "partials/footer/footer_vendedor.html" %}
+{% else %}
+{% include "partials/footer/footer.html" %}
+{% endif %}
+{% endblock %}

@@ -1,4 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from django.db.models import Q
@@ -6,6 +9,7 @@ from django.utils import timezone
 from django.contrib.auth import logout
 from . import models
 import uuid
+import pdfkit
 
 # Create your views here.
 def get_user_profile(request):
@@ -152,7 +156,11 @@ def buy_ticket(request, id_event):
             tickets.append(tickets)
             
             messages.success(request, f"Ingressos para o cliente {client.nome_cliente} emitidos")
-            return redirect("deteils_event", id_event=id_event)
+            return redirect("ticket_generate", id_ticket=ticket.id_ingresso)
+        
+            # tickets = [ticket for ticket in tickets]
+            # return reverse("tickets_list")
+            
     
     context.update({
         'event': event,
@@ -557,3 +565,26 @@ def delete_user(request, id_user):
     except models.Usuario.DoesNotExist:
         messages.error(request, "Usuário não encontrado.")
         return redirect("home")
+    
+def generate_ticket(request, id_ticket):
+    ticket = get_object_or_404(models.Ingresso, id_ingresso=id_ticket)
+    page_html = render_to_string("event/ticket.html", {'ticket': ticket})
+    configuration = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+    
+    options = {
+        'page-size': 'A5',
+        'page-width': '440mm',
+        'page-height': '44mm',
+        'encoding': "UTF-8",
+    }
+    
+    try:
+        pdf = pdfkit.from_string(page_html, False, configuration=configuration, options=options)
+        response = HttpResponse(content_type="application/pdf")
+        response['Content-Disposition'] = f'attachment; filename="ingresso_no_show_{ticket.evento.nome_evento}_cliente_{ticket.cliente.nome_cliente}.pdf"'
+        response.write(pdf)
+        
+        return response
+    except ValueError as ve:
+        return HttpResponse(f"Erro ao emitir o pdf: {str(ve)}")
+        

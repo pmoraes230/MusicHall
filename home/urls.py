@@ -19,6 +19,7 @@ urlpatterns = [
     path("delete_event/<int:id_event>/", views.delete_event, name="delete_event"),
     path("register_event/", views.register_event, name="register_event"),
     path("register_client/<int:id_event>/", views.register_client, name="register_client"),
+    path("ticket_generate/<str:id_ticket>/", views.generate_ticket, name="ticket_generate"),
     
     # SECTOR
     path("list_sector/<int:id_event>/", views.list_sector, name="list_sector"),
