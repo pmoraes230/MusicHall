@@ -84,6 +84,19 @@
             </div>
         </div>
     </div>
+    
+    <h1 class="h1 color_azul text-center">Detalhes do evento</h1>
+    <div class="row">
+        {% if grafic_setor %}
+        {% for items in grafic_setor %}
+        <div class="col-sm-6 mb-3 text-center">
+            <img src="data:image/png;base64, {{ items.grafic }}" alt="{{ items.setor }}">
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="color_azul text-center">Sem dados de venda</p>
+        {% endif %}
+    </div>
     {% endif %}
 </main>
 {% endblock %}

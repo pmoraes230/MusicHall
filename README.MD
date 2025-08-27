@@ -1,5 +1,5 @@
 # SENAC MUSIC HALL
-O senac music hall é um sistema de gerenciamento de eventos, vendas e cadastros de funcionários de uma casa de show de mesmo nome em brasilia DF. O sistema tem  a função de facilitar o dia a dia deixando o fluxo de trabalho mais ágil com ele tendo sua hierárquia interna, assim subdividindo
+O senac music hall é um sistema de gerenciamento de eventos, vendas e cadastros de funcionários de uma casa de show de mesmo nome em brasilia DF. O sistema tem  a função de facilitar o dia a dia deixando o fluxo de trabalho mais ágil com ele tendo sua hierárquia interna, assim subdividindo.
 
 ## Função dos perfis
 - Administrador (Tem a responsabilidade de gerenciar o sistema como um todo, tem acesso a todos as telas e funcionalidades, podendo tanto cadastrar um novo usuário e eventos com setores até apagar)
@@ -8,11 +8,11 @@ O senac music hall é um sistema de gerenciamento de eventos, vendas e cadastros
 
 ## Técnologias usadas
 Abaixo a lista de tecnologias usadas neste sistema
-- Python como linguagem de programação
-- Django como framework para apps web
-- MySql como banco de dados para armazenamento de informações
-- Python-dotenv para leitura de arquivos `.env`
-- Bootstrap 5 para layout de telas 
+- Python como linguagem de programação.
+- Django como framework para apps web.
+- MySql como banco de dados para armazenamento de informações.
+- Python-dotenv para leitura de arquivos `.env`.
+- Bootstrap 5 para layout de telas.
 
 ## Requitos para rodar em ambientes locais
 Para esse sistema rodar em sua máquina local é necessário seguir o passo a passo abaixo:

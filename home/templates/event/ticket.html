@@ -1,13 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+        integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet" />
+    <title>ingresso</title>
+    <style>
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .img_ticket {
+            height: 5vh;
+            position: absolute;
+            z-index: -99;
+        }
+
+        .info_ticket {
+            position: relative;
+            top: 45%;
+            left: 1%;
+        }
+
+        .center {
+            position: relative;
+            left: 22%;
+        }
+
+        .color_rosa {
+            color: #f31366;
+        }
+
+        .color_preto {
+            color: #0c0c0c;
+        }
+
+        .color_azul {
+            color: #1331a1;
+        }
+
+        .size_50 {
+            font-size: 50px;
+            font-weight: bold;
+            padding-left: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .size_20 {
+            font-size: 25px;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+            text-align: left;
+        }
+        .container {
+            margin-top: 5rem;
+        }
+        .top {
+            padding-top: 8rem;
+        }
+    </style>
 </head>
+
 <body>
     <div class="img_ticket">
-        <img src="http://127.0.0.1:8000/static/images/A5.svg" alt="image_ticket">
+        <img src="http://127.0.0.1:8000/static/images/A5.png" alt="image_ticket" />
+    </div>
+    <div class="container">
+        <div class="info_ticket">
+            <h2 class="h2 color_azul size_50 center top">Ingresso</h2>
+            <h6 class="color_rosa size_20">Nome do cliente: <span class="color_preto">{{ ticket.cliente.nome_cliente }}</span></h6>
+            <h6 class="color_rosa size_20">CPF: <span class="color_preto">{{ ticket.cliente.cpf_cliente }}</span></h6>
+            <h6 class="color_rosa size_20">Evento: <span class="color_preto">{{ ticket.evento.nome_evento }}</span></h6>
+            <h6 class="color_rosa size_20">Setor comprado: <span class="color_preto">{{ ticket.setor.nome_setor }}</span>
+            </h6>
+            <h6 class="color_rosa size_20">Data de emissão: <span class="color_preto">{{ ticket.data_emissao_ingresso|date:'d/m/Y H:i' }}</span></h6>
+            <h6 class="color_rosa size_20">Data de emissão: <span class="color_preto">{{ ticket.id_ingresso }}</span></h6>
+        </div>
     </div>
 </body>
+
 </html>

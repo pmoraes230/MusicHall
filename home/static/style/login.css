@@ -14,20 +14,6 @@ body {
     flex-direction: column;
 }
 
-.btn_eye {
-    position: relative;
-    right: 3.5rem;
-}
-
-.icon {
-    width: 86%;
-}
-
-.container_password {
-    display: flex;
-    position: relative;
-}
-
 .logo_icon {
     width: 14%;
 }

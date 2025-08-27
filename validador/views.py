@@ -7,7 +7,7 @@ from home import models
 def validation(request):
     context = get_user_profile(request)
     if request.method == "POST":
-        input_ticket = request.POST.get("ticket_input")
+        input_ticket = request.POST.get("ticket_input").replace(" ", "")
         if not input_ticket:
             messages.info(request, "Informe o código de validação do ingresso.")
             return redirect("validador")

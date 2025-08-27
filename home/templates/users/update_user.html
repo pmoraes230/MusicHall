@@ -51,7 +51,7 @@
                 <option value="" disabled selected>Escolha o perfil do usuário</option>
                 {% for profile in profiles %}
                 {% if profile.id_perfil == user.perfil.id_perfil %}
-                <option value="{{ profile.id_perfil }}" select>{{ profile.nome_perfil }}</option>
+                <option value="{{ profile.id_perfil }}" selected>{{ profile.nome_perfil }}</option>
                 {% else %}
                 <option value="{{ profile.id_perfil }}">{{ profile.nome_perfil }}</option>
                 {% endif %}
@@ -59,7 +59,8 @@
             </select>
         </div>
         <div class="text-center">
-            <button type="submit" class="btn btn_azul color_preto">Atualizar</button>
+            <button type="submit" class="btn btn_verde color_preto">Atualizar</button>
+            <a href="{% url 'list_user' %}" class="btn btn_rosa color_preto">Voltar a tela anterior</a>
         </div>
     </form>
 </main>

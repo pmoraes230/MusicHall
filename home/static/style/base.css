@@ -21,6 +21,20 @@ main {
     flex-grow: 1;
 }
 
+.btn_eye {
+    position: relative;
+    right: 3.5rem;
+}
+
+.icon {
+    width: 86%;
+}
+
+.container_password {
+    display: flex;
+    position: relative;
+}
+
 .image_header {
     width: 10%;
 }
@@ -111,6 +125,9 @@ main {
 .line_footer_vendedor {
     border-top: 2px solid var(--Rosa);
 }
+.line_footer_validador {
+    border-top: 2px solid var(--amarelo);
+}
 
 .header_card {
     background-color: var(--Preto);
@@ -125,6 +142,10 @@ main {
 
 .margin_menu_maior {
     margin-left: 36rem;
+}
+
+.pd {
+    padding: 1rem 0;
 }
 
 .line_admin {

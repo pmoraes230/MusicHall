@@ -55,8 +55,11 @@
             </select>
         </div>
         <div class="mb-3">
-            <label for="password_usuario" class="form-label color_azul">Senha:</label>
-            <input type="password" class="form-control color_azul" name="password_usuario" id="password_usuario" placeholder="Insira a sua senha">
+            <label for="password" class="form-label color_azul">Senha:</label>
+            <div class="container_password" style="width: 70.5vw;">
+                <input type="password" class="form-control color_azul" name="password_usuario" id="password" placeholder="Insira a sua senha">
+                <button type="button" class="btn btn_eye" id="btn_password"><img src="{% static 'icons/eye.svg' %}" alt="icon_svg" class="icon" id="eye"></button>
+            </div>
         </div>
         <div class="mb-3">
             <label for="confirm_password" class="form-label color_azul">Confirmar senha:</label>
@@ -64,12 +67,14 @@
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn_azul color_preto">Cadastrar</button>
+            <a href="{% url 'list_user' %}" class="btn btn_rosa color_preto">Voltar a tela anterior</a>
         </div>
     </form>
 </main>
 {% endblock %}
 {% block script %}
 <script src="{% static "scripts/cpf_format.js" %}"></script>
+<script src="{% static 'scripts/see_password.js' %}"></script>
 {% endblock %}
 {% block footer %}
 {% include "partials/footer/footer.html" %}

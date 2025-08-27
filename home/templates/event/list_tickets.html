@@ -57,7 +57,7 @@
                     {{ event.descricao_evento }}
                 </div>
                 <div class="d-flex">
-                    <a href="{% url 'list_tickets' event.id_evento %}" class="btn btn_verde color_preto">Ingressos gerados</a>
+                    <a href="{% url 'deteils_event' event.id_evento %}" class="btn btn_verde color_preto">Venda de ingresso</a>
                     <a href="{% url 'update_event' event.id_evento %}" class="btn btn_azul color_preto">Editar Evento</a>
                     <a href="{% url 'list_sector' event.id_evento %}" class="btn btn_amarelo color_preto">Setores do evento</a>
                     <a href="{% url 'delete_event' event.id_evento %}" class="btn btn_rosa color_preto">Apagar evento</a>
@@ -66,10 +66,15 @@
         </div>
     </div>
 
-    <h1 class="h1 text-center color_azul">Ingressos gerados</h1>
+    <h1 class="h1 text-center color_azul mt-4">Ingressos gerados</h1>
+    {% if tickets %}
+    <div class="mb-3">
+        <label for="searchText" class="form-label color_azul">Procurar ingresso</label>
+        <input type="text" id="searchText" class="form-control w-100 color_preto" placeholder="Insira o nome do usuário ou cpf">
+    </div>
     <div class="row">
         {% for ticket in tickets %}
-        <div class="col-sm-4 mb-3 mb-sm-0">
+        <div class="col-sm-4 mb-3 mb-sm-0 card_ticket" data-name="{{ ticket.cliente.nome_cliente|lower }}" data-cpf="{{ ticket.cliente.cpf_cliente|lower }}">
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="h5 card-text color_preto">Nome do cliente: <span class="color_azul">{{ ticket.cliente.nome_cliente }}</span></h5>
@@ -79,16 +84,25 @@
                     <p class="card-text color_preto h6">Data de emissão: <span class="color_azul">{{ ticket.data_emissao_ingresso|date:"d/m/Y H:i" }}</span></p>
                     <p class="card-text color_preto h6">Status: <span class="color_azul">{{ ticket.status_ingresso }}</span></p>
                     <p class="card-text color_preto h5">Status: <span class="color_azul">{{ ticket.id_ingresso }}</span></p>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'ticket_generate' ticket.id_ingresso %}" class="btn btn_verde color_preto"><i class="bi bi-file-earmark-pdf color_azul"></i> Emitir PDF</a>
+                    </div>
                 </div>
             </div>
         </div>
-        {% empty %}
-        <p class="color_azul text-center">Sem ingresso emitido</p>
         {% endfor %}
     </div>
+    {% else %}
+    <p class="color_azul text-center">Sem ingresso emitido</p>
+    {% endif %}
 </main>
 
 {% endblock %}
 {% block footer %}
 {% include "partials/footer/footer.html" %}
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'scripts/filter_ticket.js' %}"></script>
 {% endblock %}

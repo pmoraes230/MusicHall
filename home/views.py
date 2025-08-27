@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
@@ -128,12 +128,15 @@ def buy_ticket(request, id_event):
         if not all([id_sector, amount]):
             messages.info(request, "Informe o setor e a quantidade de ingressos que deseje adquirir.")
             
+        if not id_sector:
+            messages.info(request, "Ingressos esgotados")
+            
         try:
             sector = models.Setor.objects.get(id_setor=id_sector)
         except models.Setor.DoesNotExist:
             messages.error(request, "Setor não encontrado")
             
-        if amount == 0:
+        if amount < 1:
             messages.info(request, "Insira a quantidade de ingresso desejados")
         elif amount >= 10:
             messages.info(request, "Quantidade de ingresso por cliente é de 10 unidades.")
@@ -158,9 +161,9 @@ def buy_ticket(request, id_event):
             messages.success(request, f"Ingressos para o cliente {client.nome_cliente} emitidos")
             return redirect("ticket_generate", id_ticket=ticket.id_ingresso)
         
-            # tickets = [ticket for ticket in tickets]
-            # return reverse("tickets_list")
-            
+            # ticket_ids = [ticket.id_ingresso for ticket in tickets]
+            # url = reverse("tickets_download") + "?" + "&".join([f"ticket_ids={ticket_id}" for ticket_id in ticket_ids])
+            # return HttpResponseRedirect(url)
     
     context.update({
         'event': event,
@@ -169,6 +172,15 @@ def buy_ticket(request, id_event):
         'sectors': sectors
     })
     return render(request, "event/deteils_event.html", context)
+
+def tickets_download(request):
+    tickets = request.GET.getlist("ticket_ids")
+    ticket = models.Ingresso.objects.filter(id_ingresso__in=tickets)
+    context = {
+        **get_user_profile(request),
+        'tickets': ticket
+    }
+    return render(request, "event/tickets.html", context)
 
 def list_tickets(request, id_event):
     context = get_user_profile(request)
@@ -281,6 +293,9 @@ def delete_event(request, id_event):
     try:
         event = models.Evento.objects.get(id_evento=id_event)
         if request.method == "POST":
+            if models.Ingresso.objects.filter(evento=event).exists():
+                messages.error(request, "Evento com ingresso já emitidos, não pode mais apagar.")
+                return redirect("deteils_event", id_event=id_event)
             event.delete()
             messages.success(request, "Evento apagado do sistema.")
             return redirect("home")
@@ -389,6 +404,9 @@ def delete_sector(request, id_sector):
     try:
         sector = models.Setor.objects.get(id_setor=id_sector)
         if request.method == "POST":
+            if models.Ingresso.objects.filter(setor=sector).exists():
+                messages.error(request, "Setor com ingresso já emitidos, não pode mais apagar.")
+                return redirect("list_sector", id_event=sector.evento_id_evento.id_evento)
             sector.delete()
             messages.success(request, "Setor apagado com sucesso!")
             return redirect("home")
@@ -573,8 +591,8 @@ def generate_ticket(request, id_ticket):
     
     options = {
         'page-size': 'A5',
-        'page-width': '440mm',
-        'page-height': '44mm',
+        'page-width': '70mm',
+        'page-height': '110mm',
         'encoding': "UTF-8",
     }
     

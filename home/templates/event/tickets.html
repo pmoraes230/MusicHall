@@ -36,30 +36,14 @@
     </div>
     {% endif %}
 
-    <h1 class="text-center color_azul">Cadastrar cliente</h1>
-    <form action="#" method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="nome_usuario" class="form-label color_azul">Nome:</label>
-            <input type="text" class="form-control color_azul" name="nome_usuario" id="nome_usuario" placeholder="insira seu nome completo">
-        </div>
-        <div class="mb-3">
-            <label for="email_usuario" class="form-label color_azul">Email:</label>
-            <input type="email" class="form-control color_azul" name="email_usuario" id="email_usuario" placeholder="insira seu nome completo">
-        </div>
-        <div class="mb-3">
-            <label for="cpf_usuario" class="form-label color_azul">CPF:</label>
-            <input type="text" class="form-control color_azul" name="cpf_usuario" id="cpf_usuario" placeholder="insira seu Email" oninput="maskCPF(this)" maxlength="14">
-        </div>
-        <div class="text-center">
-            <button type="submit" class="btn btn_verde color_preto">Cadastrar</button>
-            <a href="{% url 'deteils_event' event.id_evento %}" class="btn btn_rosa color_preto">Cancelar cadastro</a>
-        </div>
-    </form>
+    <h1 class="h1 color_azul text-center">Ingressos gerados</h1>
+
+    <ul class="list-group">
+        {% for ticket in tickets %}
+        <li class="list-group-item">{{ ticket.id_ingresso }}</li>
+        {% endfor %}
+    </ul>
 </main>
-{% endblock %}
-{% block script %}
-<script src="{% static "scripts/cpf_format.js" %}"></script>
 {% endblock %}
 {% block footer %}
 {% if user_role == "Validador" %}

@@ -30,13 +30,13 @@
     </div>
     {% endif %}
 
-    <h1 class="text-center color_azul">Lista de Usuários</h1>
+    <h1 class="text-center color_azul">Lista de setores</h1>
     <div class="mb-3">
         <label for="searchUser" class="form-label color_azul">Procurar setor</label>
         <input type="text" id="searchUser" class="form-control w-100 color_preto" placeholder="Insira o nome do setor">
     </div>
     <div class="text-center mb-4 mt-4">
-        <a href="{% url "register_sector" event.id_evento %}" class="btn btn_verde color_preto">Cadastrar novo usuário</a>
+        <a href="{% url "register_sector" event.id_evento %}" class="btn btn_verde color_preto">Cadastrar novo setor</a>
         <a href="{% url 'deteils_event' event.id_evento %}" class="btn btn_azul color_preto">Voltar a tela do evento</a>
     </div>
     <div class="row">

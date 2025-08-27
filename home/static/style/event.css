@@ -10,7 +10,8 @@
 
 .description_event {
     margin: 1rem 0;
-    font-size: 25px;
+    font-size: 15px;
     font-weight: bold;
     border-bottom: 2px solid var(--amarelo);
+    max-width: 704px;
 }

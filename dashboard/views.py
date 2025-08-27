@@ -28,16 +28,25 @@ def dash(request):
                 }
                 
                 data = [v for v in counts.values() if v>0]
-                label = [f'{k}' for k,v in counts.items() if v>0]
-                if not data: continue
+                labels = [f'{k}' for k,v in counts.items() if v>0]
+                if not data: 
+                    continue
                 
-                fix, ax = plt.subplots()
-                bars = ax.bar(np.arange(len(data)), data, color=['#F8B62F', '#1331A1', '#A2CA02', '#0C0C0C'][:data])
-                ax.set_title(f"Setor {sector.nome_setor}")
+                fig, ax = plt.subplots()
+                bars = ax.bar(np.arange(len(data)), data, color=['#F8B62F', '#1331A1', '#A2CA02', '#0C0C0C'][:len(data)])
+                ax.set_title(f"Setor: {sector.nome_setor}")
                 ax.set_xticks(range(len(data)))
-                ax.set_yticklabels(locals, rotation=30, ha='tight')
-                # for bar in bars:
-                #     ax.text(bars.x)
+                ax.set_xticklabels(labels, rotation=30, ha='right')
+                for bar in bars:
+                    ax.text(bar.get_x(), bar.get_width()/2 + bar.get_height(), str(int(bar.get_height())),
+                            ha='center', va='bottom')
+                    
+                buf = io.BytesIO()
+                plt.tight_layout()
+                plt.savefig(buf, format='png')
+                plt.close(fig)
+                
+                grafic_setor.append({"setor": sector.nome_setor, 'grafic': base64.b64encode(buf.getvalue()).decode()})
                 
         except models.Evento.DoesNotExist:
             messages.error(request, "Evento não encontrado")
@@ -45,6 +54,7 @@ def dash(request):
     
     context.update({
         'events': models.Evento.objects.all(),
-        'event': event
+        'event': event,
+        'grafic_setor': grafic_setor
     })
     return render(request, "dash.html", context)

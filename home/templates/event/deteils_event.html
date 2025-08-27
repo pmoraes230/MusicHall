@@ -112,17 +112,18 @@
                 <select name="sectors" id="sectors" class="form-select color_azul">
                     <option value="" selected disabled>Selecione um setor do evento</option>
                     {% for sector in sectors %}
-                    <option value="{{ sector.id_setor }}">
-                        {% if sector.limite_setor == 0 %}Setor esgotado.{% else %}
-                        {{ sector.nome_setor }} (Ingresso disponíveis neste setor {{ sector.limite_setor }})
-                        {% endif %}
+                    {% if sector.limite_setor <= 1 %}
+                    <option value="" selected disabled>{{ sector.nome_setor }} - Ingressos esgotados</option>
+                    {% else %}
+                    <option value="{{ sector.id_setor }}">{{ sector.nome_setor }} (Ingresso disponíveis neste setor {{ sector.limite_setor }})
                     </option>
+                    {% endif %}
                     {% endfor %}
                 </select>
             </div>
             <div class="mb-3">
                 <label for="amount" class="form-label color_azul">Quantidade de ingresso:</label>
-                <input type="number" value="0" name="amount" id="amount" class="form-control color_azul" placeholder="Quantidade de ingresso">
+                <input type="number" min="1" value="0" name="amount" id="amount" class="form-control color_azul" placeholder="Quantidade de ingresso">
             </div>
             <div class="buttons">
                 <button type="submit" class="btn btn_verde color_preto" name="buy_ticket">Comprar</button>
