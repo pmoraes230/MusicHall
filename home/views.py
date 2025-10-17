@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.utils import timezone
 from django.contrib.auth import logout
 from . import models
@@ -123,7 +123,7 @@ def buy_ticket(request, id_event):
             return redirect("buy_client", id_event=id_event)
         
         id_sector = request.POST.get("sectors")
-        amount = int(request.POST.get("amount"), 0)
+        amount = int(request.POST.get("amount") or 0)
         
         if not all([id_sector, amount]):
             messages.info(request, "Informe o setor e a quantidade de ingressos que deseje adquirir.")
@@ -327,15 +327,36 @@ def register_sector(request, id_event):
         id_evento = request.POST.get("id_evento")
         
         if not all([nome_setor, limite_setor, preco_setor, id_evento]):
-            messages.info(request, "Preechimento de campos são obrigatórios.")
+            messages.info(request, "Preenchimento de campos é obrigatório.")
             return redirect("register_sector", id_event=id_event)
         
         try:
             evento = models.Evento.objects.get(id_evento=id_evento)
         except models.Evento.DoesNotExist:
-            messages.error(request, "Evento não encontrado")
+            messages.error(request, "Evento não encontrado.")
             return redirect("register_sector", id_event=id_event)
         
+        # Conversão para inteiro (com segurança)
+        try:
+            limite_setor = int(limite_setor)
+            limite_evento = int(evento.limitepessoas_evento)
+        except ValueError:
+            messages.error(request, "Os limites devem ser números válidos.")
+            return redirect("register_sector", id_event=id_event)
+
+        # Soma de ingressos já existentes + novo setor
+        total_setores = models.Setor.objects.filter(evento_id_evento=evento).aggregate(total=Sum('limite_setor'))['total'] or 0
+        
+        if total_setores + limite_setor > limite_evento:
+            restante = limite_evento - total_setores
+            messages.error(
+                request,
+                f"Limite excedido! Este evento ainda possui apenas {restante} ingressos disponíveis "
+                f"(limite total: {limite_evento})."
+            )
+            return redirect("register_sector", id_event=id_event)
+        
+        # Criação do setor
         try:
             new_sector = models.Setor.objects.create(
                 nome_setor=nome_setor,
@@ -354,49 +375,73 @@ def register_sector(request, id_event):
     
     context.update({
         'event': event,
-        'events': models.Evento.objects.all()
+        'events': models.Evento.objects.all(),
+        'eventos_data': [
+            {
+                'id': ev.id_evento,
+                'limite_evento': ev.limitepessoas_evento,
+                'restante': (ev.limitepessoas_evento - (models.Setor.objects.filter(evento_id_evento=ev).aggregate(
+                    total=Sum('limite_setor')
+                )['total'] or 0))
+            } for ev in models.Evento.objects.all()
+        ]
     })
     return render(request, "sector/register_sector.html", context)
+
+from django.db.models import Sum  # Adicione no topo
 
 def update_sector(request, id_sector):
     context = get_user_profile(request)
     sector = models.Setor.objects.get(id_setor=id_sector)
-    
+    evento = sector.evento_id_evento  # Evento vinculado ao setor
+
     if request.method == "POST":
         nome_setor = request.POST.get("nome_setor")
         limite_setor = request.POST.get("limite_setor")
         preco_setor = request.POST.get("preco_setor")
-        id_evento = request.POST.get("id_evento")
-    
-        if not all([nome_setor, limite_setor, preco_setor, id_evento]):
-            messages.info(request, "Preechimento de campos são obrigatórios.")
+        
+        # Não permite alterar o evento — continua o mesmo
+        id_evento = evento.id_evento
+
+        if not all([nome_setor, limite_setor, preco_setor]):
+            messages.info(request, "Preenchimento de campos é obrigatório.")
             return redirect("update_sector", id_sector=id_sector)
-        
-        try:
-            evento = models.Evento.objects.get(id_evento=id_evento)
-        except models.Evento.DoesNotExist:
-            messages.error(request, "Evento não encontrado")
-            return redirect("register_sector", id_event=id_sector)
-        
+
+        # Validação de limite total (back-end)
+        total_setores = models.Setor.objects.filter(evento_id_evento=evento).exclude(id_setor=id_sector).aggregate(
+            total=Sum('limite_setor')
+        )['total'] or 0
+
+        limite_restante = evento.limitepessoas_evento - total_setores
+        if int(limite_setor) > limite_restante:
+            messages.error(request, f"O limite do setor ({limite_setor}) ultrapassa o restante de {limite_restante} ingressos disponíveis para o evento.")
+            return redirect("update_sector", id_sector=id_sector)
+
         try:
             sector.nome_setor = nome_setor
             sector.limite_setor = limite_setor
             sector.preco_setor = preco_setor
-            sector.evento_id_evento = evento
-            
             sector.full_clean()
             sector.save()
-            
+
             messages.success(request, f"{sector.nome_setor} atualizado com sucesso.")
-            return redirect("list_sector", id_event=sector.evento_id_evento.id_evento)
-            
+            return redirect("list_sector", id_event=evento.id_evento)
+
         except ValueError as ve:
-            messages.error(request, f"Setor não encontrado: {str(ve)}")
-            return redirect("register_sector", id_event=id_sector)
-    
+            messages.error(request, f"Erro ao atualizar setor: {str(ve)}")
+            return redirect("update_sector", id_sector=id_sector)
+
+    # Calcula limite restante para exibir no front-end
+    total_setores = models.Setor.objects.filter(evento_id_evento=evento).exclude(id_setor=id_sector).aggregate(
+        total=Sum('limite_setor')
+    )['total'] or 0
+    limite_restante = evento.limitepessoas_evento - total_setores
+
     context.update({
         'sector': sector,
-        'events': models.Evento.objects.all()
+        'evento': evento,
+        'limite_evento': evento.limitepessoas_evento,
+        'limite_restante': limite_restante,
     })
     return render(request, "sector/update_sector.html", context)
 

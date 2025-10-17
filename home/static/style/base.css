@@ -86,9 +86,10 @@ main {
 }
 
 .btn_verde {
-    border: 2px solid var(--verde);
+    /* border: 2px solid var(--verde); */
+    font-weight: bold;
     border-radius: 50px;
-    background-color: transparent;
+    background-color: var(--verde);
 } 
 
 .btn_verde:hover {

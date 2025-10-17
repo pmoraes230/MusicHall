@@ -2,9 +2,7 @@
 {% load static %}
 
 {% block content %}
-{% block header %}
 {% include "partials/header/header.html" %}
-{% endblock %}
 
 <main class="container">
     {% if messages %}
@@ -35,40 +33,64 @@
         {% csrf_token %}
         <div class="mb-3">
             <label for="nome_setor" class="form-label color_azul">Nome do setor:</label>
-            <input type="text" class="form-control color_azul" name="nome_setor" id="nome_setor" placeholder="insira seu nome do setor" value="{{ sector.nome_setor }}">
+            <input type="text" class="form-control color_azul" name="nome_setor" id="nome_setor"
+                value="{{ sector.nome_setor }}">
         </div>
         <div class="mb-3">
             <label for="limite_setor" class="form-label color_azul">Limite do setor:</label>
-            <input type="number" class="form-control color_azul" name="limite_setor" id="limite_setor" placeholder="insira o limite do setor" value="{{ sector.limite_setor }}">
+            <input type="number" class="form-control color_azul" name="limite_setor" id="limite_setor"
+                value="{{ sector.limite_setor }}">
+            <small class="text-muted">Ingressos restantes no evento: {{ limite_restante }}</small>
         </div>
         <div class="mb-3">
-            <label for="preco_setor" class="form-label color_azul">Preço do setor</label>
-            <input type="number" class="form-control color_azul" name="preco_setor" id="preco_setor" placeholder="insira o preço do setor" value="{{ sector.preco_setor|floatformat }}">
+            <label for="preco_setor" class="form-label color_azul">Preço do setor:</label>
+            <input type="number" class="form-control color_azul" name="preco_setor" id="preco_setor"
+                value="{{ sector.preco_setor|floatformat }}">
         </div>
+
+        <!-- Evento bloqueado -->
         <div class="mb-3">
-            <label for="id_evento" class="form-label color_azul">Escolha um evento</label>
-            <select name="id_evento" id="id_evento" class="form-select color_azul">
-                <option value="" disabled selected>Escolha o evento deste setor</option>
-                {% for event in events %}
-                {% if event.id_evento == sector.evento_id_evento.id_evento %}
-                <option value="{{ event.id_evento }}" selected>{{ event.nome_evento }}</option>
-                {% else %}
-                <option value="{{ event.id_evento }}">{{ event.nome_evento }}</option>
-                {% endif %}
-                {% endfor %}
-            </select>
+            <label for="id_evento" class="form-label color_azul">Evento associado:</label>
+            <input type="text" class="form-control color_azul" id="evento_nome"
+                   value="{{ evento.nome_evento }} (Limite: {{ evento.limitepessoas_evento }})" disabled>
+            <input type="hidden" name="id_evento" value="{{ evento.id_evento }}">
         </div>
-        
+
         <div class="text-center">
-            <button type="submit" class="btn btn_verde color_preto">Cadastrar</button>
-            <a href="{% url 'list_sector' sector.evento_id_evento.id_evento %}" class="btn btn_rosa color_preto">Cancelar cadastro</a>
+            <button type="submit" class="btn btn_verde color_preto">Atualizar</button>
+            <a href="{% url 'list_sector' evento.id_evento %}" class="btn btn_rosa color_preto">Cancelar</a>
         </div>
     </form>
 </main>
 {% endblock %}
+
 {% block script %}
-<script src="{% static "scripts/cpf_format.js" %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const inputLimite = document.getElementById("limite_setor");
+    const limiteEvento = {{ limite_evento }};
+    const limiteRestante = {{ limite_restante }};
+
+    inputLimite.addEventListener("input", function () {
+        const valor = parseInt(this.value) || 0;
+        if (valor > limiteRestante) {
+            showModalMessage(
+                `O limite deste setor (${valor}) ultrapassa o restante de ${limiteRestante} ingressos disponíveis para o evento (limite total: ${limiteEvento}).`
+            );
+            this.value = "";
+        }
+    });
+
+    function showModalMessage(message) {
+        const modalBody = document.querySelector("#modalMessage .modal-body ul");
+        modalBody.innerHTML = `<li class="list-group-item color_azul">${message}</li>`;
+        const modal = new bootstrap.Modal(document.getElementById("modalMessage"));
+        modal.show();
+    }
+});
+</script>
 {% endblock %}
+
 {% block footer %}
 {% include "partials/footer/footer.html" %}
 {% endblock %}

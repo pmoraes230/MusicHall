@@ -41,15 +41,15 @@
         {% csrf_token %}
         <div class="mb-3">
             <label for="nome_usuario" class="form-label color_azul">Nome:</label>
-            <input type="text" class="form-control color_azul" name="nome_usuario" id="nome_usuario" placeholder="insira seu nome completo">
+            <input type="text" class="form-control color_azul" name="nome_usuario" id="nome_usuario" placeholder="Insira seu nome completo">
         </div>
         <div class="mb-3">
             <label for="email_usuario" class="form-label color_azul">Email:</label>
-            <input type="email" class="form-control color_azul" name="email_usuario" id="email_usuario" placeholder="insira seu nome completo">
+            <input type="email" class="form-control color_azul" name="email_usuario" id="email_usuario" placeholder="Insira seu Email">
         </div>
         <div class="mb-3">
             <label for="cpf_usuario" class="form-label color_azul">CPF:</label>
-            <input type="text" class="form-control color_azul" name="cpf_usuario" id="cpf_usuario" placeholder="insira seu Email" oninput="maskCPF(this)" maxlength="14">
+            <input type="text" class="form-control color_azul" name="cpf_usuario" id="cpf_usuario" placeholder="insira seu CPF" oninput="maskCPF(this)" maxlength="14">
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn_verde color_preto">Cadastrar</button>

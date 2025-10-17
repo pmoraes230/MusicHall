@@ -84,6 +84,24 @@
             </div>
         </div>
     </div>
+
+    <!-- 🔔 ALERTAS DE OCUPAÇÃO -->
+    {% if alert_emitidos or alert_validados %}
+    <div class="mt-4">
+        {% if alert_emitidos %}
+        <div class="alert alert-{{ color_emitidos }}" role="alert">
+            <strong>{{ alert_emitidos }}</strong><br>
+            Ocupação total: {{ ocup_emitidos|floatformat:1 }}%
+        </div>
+        {% endif %}
+        {% if alert_validados %}
+        <div class="alert alert-{{ color_validados }}" role="alert">
+            <strong>{{ alert_validados }}</strong><br>
+            Validação total: {{ ocup_validados|floatformat:1 }}%
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
     
     <h1 class="h1 color_azul text-center">Detalhes do evento</h1>
     <div class="row">
@@ -100,6 +118,7 @@
     {% endif %}
 </main>
 {% endblock %}
+
 {% block footer %}
 {% if user_role == "Validador" %}
 {% include "partials/footer/footer_validador.html" %}

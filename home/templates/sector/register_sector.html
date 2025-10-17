@@ -7,7 +7,7 @@
 {% endblock %}
 
 <main class="container">
-    {% if messages %}
+    <!-- Modal de mensagens (sempre presente, mesmo sem mensagens Django) -->
     <div class="modal fade" id="modalMessage" tabindex="-1" aria-labelledby="modalMessageLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -17,9 +17,11 @@
                 </div>
                 <div class="modal-body">
                     <ul class="list-group">
-                        {% for message in messages %}
-                        <li class="list-group-item color_azul {{ message.tags }}">{{ message }}</li>
-                        {% endfor %}
+                        {% if messages %}
+                            {% for message in messages %}
+                            <li class="list-group-item color_azul {{ message.tags }}">{{ message }}</li>
+                            {% endfor %}
+                        {% endif %}
                     </ul>
                 </div>
                 <div class="modal-footer">
@@ -28,33 +30,44 @@
             </div>
         </div>
     </div>
-    {% endif %}
 
     <h1 class="text-center color_azul">Cadastrar setor</h1>
+
     <form action="#" method="post">
         {% csrf_token %}
         <div class="mb-3">
             <label for="nome_setor" class="form-label color_azul">Nome do setor:</label>
-            <input type="text" class="form-control color_azul" name="nome_setor" id="nome_setor" placeholder="insira seu nome do setor">
+            <input type="text" class="form-control color_azul" name="nome_setor" id="nome_setor"
+                placeholder="Insira o nome do setor">
         </div>
+
         <div class="mb-3">
             <label for="limite_setor" class="form-label color_azul">Limite do setor:</label>
-            <input type="number" class="form-control color_azul" name="limite_setor" id="limite_setor" placeholder="insira o limite do setor">
+            <input type="number" class="form-control color_azul" name="limite_setor" id="limite_setor"
+                placeholder="Insira o limite do setor">
         </div>
+
         <div class="mb-3">
             <label for="preco_setor" class="form-label color_azul">Preço do setor</label>
-            <input type="number" class="form-control color_azul" name="preco_setor" id="preco_setor" placeholder="insira o preço do setor">
+            <input type="number" class="form-control color_azul" name="preco_setor" id="preco_setor"
+                placeholder="Insira o preço do setor">
         </div>
+
         <div class="mb-3">
             <label for="id_evento" class="form-label color_azul">Escolha um evento</label>
-            <select name="id_evento" id="id_evento" class="form-select color_azul">
+            <select name="id_evento" id="id_evento"
+                class="form-select color_azul"
+                data-eventos='{{ eventos_data|safe }}'>
                 <option value="" disabled selected>Escolha o evento deste setor</option>
                 {% for event in events %}
-                <option value="{{ event.id_evento }}">{{ event.nome_evento }}</option>
+                <option value="{{ event.id_evento }}">
+                    {{ event.nome_evento }} — Limite total: {{ event.limitepessoas_evento }}
+                </option>
                 {% endfor %}
             </select>
+            <small id="info_restante" class="form-text color_azul"></small>
         </div>
-        
+
         <div class="text-center">
             <button type="submit" class="btn btn_verde color_preto">Cadastrar</button>
             <a href="{% url 'list_sector' event.id_evento %}" class="btn btn_rosa color_preto">Cancelar cadastro</a>
@@ -62,9 +75,53 @@
     </form>
 </main>
 {% endblock %}
+
 {% block script %}
-<script src="{% static "scripts/cpf_format.js" %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const selectEvento = document.getElementById("id_evento");
+    const inputLimite = document.getElementById("limite_setor");
+    const infoRestante = document.getElementById("info_restante");
+
+    // Dados passados pelo Django
+    const eventosData = JSON.parse(selectEvento.dataset.eventos || "{}");
+
+    let limiteEvento = 0;
+    let limiteRestante = 0;
+
+    // Ao trocar o evento
+    selectEvento.addEventListener("change", function () {
+        const eventId = this.value;
+        const evento = eventosData.find(ev => ev.id == eventId);
+        if (evento) {
+            limiteEvento = evento.limite_evento;
+            limiteRestante = evento.restante;
+            infoRestante.textContent = `Ingressos restantes neste evento: ${limiteRestante}`;
+        }
+    });
+
+    // Ao digitar o limite do setor
+    inputLimite.addEventListener("input", function () {
+        const valor = parseInt(this.value) || 0;
+        if (limiteEvento && valor > limiteRestante) {
+            showModalMessage(
+                `O limite deste setor (${valor}) ultrapassa o restante de ${limiteRestante} ingressos disponíveis para o evento (limite total: ${limiteEvento}).`
+            );
+            this.value = "";
+        }
+    });
+
+    // Exibe o modal Bootstrap
+    function showModalMessage(message) {
+        const modalBody = document.querySelector("#modalMessage .modal-body ul");
+        modalBody.innerHTML = `<li class="list-group-item color_azul">${message}</li>`;
+        const modal = new bootstrap.Modal(document.getElementById("modalMessage"));
+        modal.show();
+    }
+});
+</script>
 {% endblock %}
+
 {% block footer %}
 {% include "partials/footer/footer.html" %}
 {% endblock %}
